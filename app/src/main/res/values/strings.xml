@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Doctor_Appointment</string>
+    <string name="action_settings">Settings</string>
+
+
+<!--    <Add Patient> -->
+    <string name="add_new_patient_title">Add New Patient Here</string>
+    <string name="add_new_patient_name">Enter Patient Name</string>
+    <string name="add_new_patient_phone_num">Enter Patient Phone Num</string>
+    <string name="add_new_patient_age">Enter Patient Age</string>
+    <string name="add_new_patient_disease">Enter Patient Disease</string>
+    <string name="add_new_patient_symptoms">Enter Patient Symptoms</string>
+    <string name="add_new_patient_button">Add Patient</string>
+
+
+
+
+</resources>
