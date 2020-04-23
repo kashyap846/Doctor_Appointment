@@ -12,7 +12,10 @@
     <string name="add_new_patient_symptoms">Enter Patient Symptoms</string>
     <string name="add_new_patient_button">Add Patient</string>
 
+<!--    <Widgets>-->
 
+    <string name="total_appointments_till_date">Total Appointments till date:</string>
+    <string name="total_patients_till_date">Total Patients till date:</string>
 
 
 </resources>

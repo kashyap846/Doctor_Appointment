@@ -1,12 +1,15 @@
 package com.doctor_appointment.widgets;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
+import com.doctor_appointment.MainActivity;
 import com.doctor_appointment.R;
 import com.doctor_appointment.database.DoctorAppointmentDBHelper;
 
@@ -25,6 +28,10 @@ public class DoctorAppointmentWidgetProvider extends AppWidgetProvider {
             remoteViews.setViewVisibility(R.id.container, View.VISIBLE);
             populateAppointmentsCount(remoteViews,appointmentCount,APPOINTMENT_VIEW_ID);
             populatePatientsCount(remoteViews,patientsCount,PATIENT_VIEW_ID);
+            Intent intent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
+            remoteViews.setOnClickPendingIntent(R.id.widget_container, pendingIntent);
+
             appWidgetManager.updateAppWidget(appWidgetId,remoteViews);
         }
 
