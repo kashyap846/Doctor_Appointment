@@ -13,8 +13,9 @@ public class PatientInfo {
     private String phoneNum;
     private String symptoms;
     private long createdTime;
+    private long appointmentDate;
 
-    public PatientInfo(long id, String name, int age, String disease, String symptoms, long createdTime,String phoneNum) {
+    public PatientInfo(long id, String name, int age, String disease, String symptoms, long createdTime,String phoneNum,long appointmentDate) {
         this.id = id;
         this.name = name;
         this.age = age;
@@ -22,11 +23,17 @@ public class PatientInfo {
         this.symptoms = symptoms;
         this.createdTime = createdTime;
         this.phoneNum = phoneNum;
+        this.appointmentDate = appointmentDate;
     }
 
-    public PatientInfo(String name, int age, String disease, String symptoms, String phoneNum) {
-        this(new Random().nextLong(),name,age,disease,symptoms,new Date().getTime(),phoneNum);
+    public PatientInfo(String name, int age, String disease, String symptoms, String phoneNum, long appointmentDate) {
+        this(new Random().nextLong(),name,age,disease,symptoms,new Date().getTime(),phoneNum,appointmentDate);
     }
+
+    public long getAppointmentDate() {
+        return appointmentDate;
+    }
+
     public String getPhoneNum() {
         return phoneNum;
     }

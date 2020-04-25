@@ -8,20 +8,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.doctor_appointment.R;
 import com.doctor_appointment.listeners.OnPatientChangedListener;
 import com.doctor_appointment.model.PatientInfo;
 import com.doctor_appointment.model.PatientInfoList;
+import com.doctor_appointment.utils.DoctorUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.TimeZone;
 
 public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppointmentAdapter.DoctorAppointmentViewHolder>  implements OnPatientChangedListener{
     //private ArrayList<PatientInfo> data;
@@ -77,7 +74,15 @@ public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppoint
             return phoneNum;
         }
 
-        private TextView name,age,phoneNum;
+        private TextView name;
+        private TextView age;
+        private TextView phoneNum;
+
+        public TextView getAppointmentTime() {
+            return appointmentTime;
+        }
+
+        private TextView appointmentTime;
         private PatientInfo patientInfo;
         private OnPatientChangedListener changedListener;
         public DoctorAppointmentViewHolder(@NonNull View itemView) {
@@ -85,6 +90,7 @@ public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppoint
             this.age = itemView.findViewById(R.id.age);
             this.phoneNum = itemView.findViewById(R.id.phone_num);
             this.name = itemView.findViewById(R.id.name);
+            this.appointmentTime = itemView.findViewById(R.id.appointment_date);
         }
 
         public void populate(PatientInfo patientInfo,OnPatientChangedListener changedListener){
@@ -93,13 +99,10 @@ public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppoint
             name.setText(patientInfo.getName());
             age.setText(String.valueOf(patientInfo.getAge()));
             phoneNum.setText(patientInfo.getPhoneNum());
+            appointmentTime.setText("Appointment Date "+ DoctorUtils.getDateString(patientInfo.getAppointmentDate()));
             itemView.setOnClickListener(this::onClick);
         }
         private void onClick(View view){
-            Date date = new Date(patientInfo.getCreatedTime());
-            DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            format.setTimeZone(TimeZone.getTimeZone("EST"));
-            String dateFormat = format.format(date).toString().substring(0,20).replace("T"," ");
             Log.e("onClick: ", "onClick"+patientInfo.getCreatedTime());
             new AlertDialog.Builder(view.getContext())
                     .setTitle("Patient info")
@@ -108,7 +111,7 @@ public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppoint
                             "Number::       "+patientInfo.getPhoneNum()+"\n"+
                             "Disease::      "+patientInfo.getDisease()+"\n"+
                             "Symptoms::     "+patientInfo.getSymptoms()+"\n"+
-                            "CreationTime::     "+dateFormat)
+                            "Appointment Time::     "+DoctorUtils.getDateString(patientInfo.getAppointmentDate())) //"CreationTime::     "+dateFormat
                     .setNegativeButton("cancel",(a,b) -> {})
                     .setPositiveButton("Delete",(a,b) ->{changedListener.onPatientRemoved(patientInfo);})
                     .show();

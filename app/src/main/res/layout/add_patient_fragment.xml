@@ -80,6 +80,17 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/appointment_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:padding="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/add_appointment_date"
+        android:textSize="20sp" />
+
     <Button
         android:id="@+id/add"
         android:layout_width="wrap_content"

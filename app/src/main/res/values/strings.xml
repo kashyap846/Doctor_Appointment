@@ -9,7 +9,8 @@
     <string name="add_new_patient_phone_num">Enter Patient Phone Num</string>
     <string name="add_new_patient_age">Enter Patient Age</string>
     <string name="add_new_patient_disease">Enter Patient Disease</string>
-    <string name="add_new_patient_symptoms">Enter Patient Symptoms</string>
+    <string name="add_new_patient_symptoms">Enter Patient Symptoms</string>add_new_pick_date
+    <string name="add_appointment_date">Click to select Appointment date</string>
     <string name="add_new_patient_button">Add Patient</string>
 
 <!--    <Widgets>-->

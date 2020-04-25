@@ -8,14 +8,17 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.doctor_appointment.model.PatientInfo;
 import com.doctor_appointment.model.PatientInfoList;
+import com.doctor_appointment.utils.DoctorUtils;
 import com.doctor_appointment.widgets.DoctorAppointmentWidgetProvider;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
     private Context context;
@@ -27,7 +30,8 @@ public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
             DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_DISEASE+ " TEXT,"+
             DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_SYMPTOMS+ " TEXT,"+
             DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_CREATED_TIME+ " INTEGER," +
-            DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_PHONE_NUM+ " TEXT" + ")";
+            DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_PHONE_NUM+ " TEXT," +
+            DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_APPOINTMENT_TIME+ " INTEGER" + ")";
 
 
     public static DoctorAppointmentDBHelper getInstance(){
@@ -36,6 +40,7 @@ public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
 
     public static void initialize(Context context){
         INSTANCE = new DoctorAppointmentDBHelper(context);
+        Log.e("initialize: ","initialize patient" );
         PatientInfoList.initialize();
     }
     private DoctorAppointmentDBHelper(@Nullable Context context) {
@@ -47,7 +52,9 @@ public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE);
         //insert sample dataa here
-        insert(db,new PatientInfo("Kashyap",26,"Viral Fever","cold,cough","9999999999"));
+        insert(db,new PatientInfo("Kashyap",26,"Viral Fever","cold,cough","9999999999",new Date().getTime()- (DoctorUtils.ONE_DAY)*2));
+        insert(db,new PatientInfo("Kumar",43,"Viral Fever","cold,cough","7059882851",new Date().getTime()- (DoctorUtils.ONE_DAY)*3));
+
     }
 
     @Override
@@ -75,6 +82,7 @@ public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
         values.put(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_SYMPTOMS,patientInfo.getSymptoms());
         values.put(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_CREATED_TIME,patientInfo.getCreatedTime());
         values.put(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_PHONE_NUM,patientInfo.getPhoneNum());
+        values.put(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_APPOINTMENT_TIME,patientInfo.getAppointmentDate());
         database.insert(DoctorAppointmentContract.DoctorAppointmentEntry.TABLE_NAME,null,values);
         updateAppWidgetBroadcast();
     }
@@ -94,7 +102,7 @@ public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
     public ArrayList<PatientInfo> getPatientInfo(){
         SQLiteDatabase database = getReadableDatabase();
         ArrayList<PatientInfo> result = new ArrayList<>();
-        String sortOrder = DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_CREATED_TIME+ " DESC";
+        String sortOrder = DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_APPOINTMENT_TIME+ " DESC";
         Cursor cursor = database.query(
                 DoctorAppointmentContract.DoctorAppointmentEntry.TABLE_NAME,
                 null,
@@ -113,7 +121,8 @@ public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
             String symptoms = cursor.getString(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_SYMPTOMS));
             long createdTime = cursor.getLong(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_CREATED_TIME));
             String phoneNum = cursor.getString(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_PHONE_NUM));
-            result.add(new PatientInfo(id,name,age,disease,symptoms,createdTime,phoneNum));
+            long appointmentTime = cursor.getLong(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_APPOINTMENT_TIME));
+            result.add(new PatientInfo(id,name,age,disease,symptoms,createdTime,phoneNum,appointmentTime));
         }
         cursor.close();
         return result;
@@ -146,6 +155,64 @@ public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
 //        }
         cursor.close();
         return count;
+    }
+
+
+
+    public int getOverDueCount(){
+        SQLiteDatabase database = getReadableDatabase();
+        ArrayList<Long> result = new ArrayList<>();
+        Cursor cursor = database.query(
+                DoctorAppointmentContract.DoctorAppointmentEntry.TABLE_NAME,
+                new String[]{DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_APPOINTMENT_TIME},
+                null,
+                null,
+                DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_APPOINTMENT_TIME,
+                null,
+                null,
+                null);
+        //int count = cursor.getCount();
+        while (cursor.moveToNext()){
+            //long id = cursor.getLong(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry._ID));
+            long appointmentTime = cursor.getLong(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_APPOINTMENT_TIME));
+            if(appointmentTime-new Date().getTime()<0) {
+                Log.e("getOverDueCount: ", "truee"+appointmentTime);
+                result.add(appointmentTime);
+            }
+        }
+        cursor.close();
+        return result.size();
+    }
+
+    public PatientInfo getNextPatientInfo(){
+        SQLiteDatabase database = getReadableDatabase();
+        PatientInfo result = null;
+        String sortOrder = DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_APPOINTMENT_TIME+ " ASC";
+        Cursor cursor = database.query(
+                DoctorAppointmentContract.DoctorAppointmentEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                sortOrder,
+                "1"
+
+        );
+        while (cursor.moveToNext()){
+            long id = cursor.getLong(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry._ID));
+            String name = cursor.getString(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_NAME));
+            int age = cursor.getInt(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_AGE));
+            String disease = cursor.getString(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_DISEASE));
+            String symptoms = cursor.getString(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_SYMPTOMS));
+            long createdTime = cursor.getLong(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_CREATED_TIME));
+            String phoneNum = cursor.getString(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_PHONE_NUM));
+            long appointmentTime = cursor.getLong(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_APPOINTMENT_TIME));
+            result = new PatientInfo(id,name,age,disease,symptoms,createdTime,phoneNum,appointmentTime);
+
+        }
+        cursor.close();
+        return result;
     }
 
 

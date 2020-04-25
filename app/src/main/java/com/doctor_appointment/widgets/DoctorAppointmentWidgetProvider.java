@@ -12,15 +12,26 @@ import android.widget.RemoteViews;
 import com.doctor_appointment.MainActivity;
 import com.doctor_appointment.R;
 import com.doctor_appointment.database.DoctorAppointmentDBHelper;
+import com.doctor_appointment.model.PatientInfo;
+import com.doctor_appointment.utils.DoctorUtils;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DoctorAppointmentWidgetProvider extends AppWidgetProvider {
     private static final int APPOINTMENT_VIEW_ID = R.id.appointments;
     private static final int PATIENT_VIEW_ID = R.id.patients;
+    private static final int OVERDUE_VIEW_ID = R.id.overdue;
+    private static final int NEXT_PATIENT_ID = R.id.next_patient;
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         int appointmentCount = DoctorAppointmentDBHelper.getInstance().getPatientCount();
         int patientsCount = DoctorAppointmentDBHelper.getInstance().getUniquePatient();
+        int overDueCount =  DoctorAppointmentDBHelper.getInstance().getOverDueCount();
+        PatientInfo nextPatientInfo = DoctorAppointmentDBHelper.getInstance().getNextPatientInfo();
+        //Log.e("next pastiernt: ","next"+DoctorAppointmentDBHelper.getInstance().getNextPatientInfo() );
         Log.e("onUpdate: ","patientsCount"+patientsCount );
         for(int i=0;i< appWidgetIds.length;i++){
             int appWidgetId = appWidgetIds[i];
@@ -28,6 +39,8 @@ public class DoctorAppointmentWidgetProvider extends AppWidgetProvider {
             remoteViews.setViewVisibility(R.id.container, View.VISIBLE);
             populateAppointmentsCount(remoteViews,appointmentCount,APPOINTMENT_VIEW_ID);
             populatePatientsCount(remoteViews,patientsCount,PATIENT_VIEW_ID);
+            populateOverdueCount(remoteViews,overDueCount,OVERDUE_VIEW_ID);
+            populateNextPatientInfo(remoteViews,nextPatientInfo,NEXT_PATIENT_ID);
             Intent intent = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context,0,intent,0);
             remoteViews.setOnClickPendingIntent(R.id.widget_container, pendingIntent);
@@ -37,12 +50,20 @@ public class DoctorAppointmentWidgetProvider extends AppWidgetProvider {
 
     }
 
+    private void populateNextPatientInfo(RemoteViews remoteViews, PatientInfo nextPatientInfo, int nextPatientId) {
+        remoteViews.setTextViewText(nextPatientId,"Next patient is "+nextPatientInfo.getName()+"   "+ DoctorUtils.getDateString(nextPatientInfo.getAppointmentDate())+ "\n");
+    }
+
     private void populatePatientsCount(RemoteViews remoteViews, int patientsCount, int patientViewId) {
-        remoteViews.setTextViewText(patientViewId,"Total Patients till date "+patientsCount);
+        remoteViews.setTextViewText(patientViewId,"Total Patients till date "+patientsCount+"\n");
     }
 
     private void populateAppointmentsCount(RemoteViews remoteViews, int appointmentCount, int appointmentViewId) {
         Log.e("populateAppointment: ", "rgr"+appointmentCount);
-        remoteViews.setTextViewText(appointmentViewId,"Total Appointments till date "+appointmentCount);
+        remoteViews.setTextViewText(appointmentViewId,"Total Appointments till date "+appointmentCount+"\n");
+    }
+
+    private void populateOverdueCount(RemoteViews remoteViews, int overdueCount, int overdueViewId) {
+        remoteViews.setTextViewText(overdueViewId,"Total Overdue appointments "+overdueCount+"\n");
     }
 }

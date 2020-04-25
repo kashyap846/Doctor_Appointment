@@ -18,6 +18,8 @@ public class DoctorAppointmentContract {
         public static final String COLUMN_NAME_SYMPTOMS = "symptoms";
         public static final String COLUMN_NAME_CREATED_TIME = "createdTime";
         public static final String COLUMN_NAME_PHONE_NUM = "phoneNum";
+        public static final String COLUMN_NAME_APPOINTMENT_TIME = "appointmentDate";
+
 
     }
 }
