@@ -15,10 +15,6 @@ import com.doctor_appointment.database.DoctorAppointmentDBHelper;
 import com.doctor_appointment.model.PatientInfo;
 import com.doctor_appointment.utils.DoctorUtils;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class DoctorAppointmentWidgetProvider extends AppWidgetProvider {
     private static final int APPOINTMENT_VIEW_ID = R.id.appointments;
     private static final int PATIENT_VIEW_ID = R.id.patients;
@@ -31,8 +27,6 @@ public class DoctorAppointmentWidgetProvider extends AppWidgetProvider {
         int patientsCount = DoctorAppointmentDBHelper.getInstance().getUniquePatient();
         int overDueCount =  DoctorAppointmentDBHelper.getInstance().getOverDueCount();
         PatientInfo nextPatientInfo = DoctorAppointmentDBHelper.getInstance().getNextPatientInfo();
-        //Log.e("next pastiernt: ","next"+DoctorAppointmentDBHelper.getInstance().getNextPatientInfo() );
-        Log.e("onUpdate: ","patientsCount"+patientsCount );
         for(int i=0;i< appWidgetIds.length;i++){
             int appWidgetId = appWidgetIds[i];
             RemoteViews remoteViews =  new RemoteViews(context.getPackageName(),R.layout.app_widget_doctor_appointment);
@@ -59,7 +53,6 @@ public class DoctorAppointmentWidgetProvider extends AppWidgetProvider {
     }
 
     private void populateAppointmentsCount(RemoteViews remoteViews, int appointmentCount, int appointmentViewId) {
-        Log.e("populateAppointment: ", "rgr"+appointmentCount);
         remoteViews.setTextViewText(appointmentViewId,"Total Appointments till date "+appointmentCount+"\n");
     }
 

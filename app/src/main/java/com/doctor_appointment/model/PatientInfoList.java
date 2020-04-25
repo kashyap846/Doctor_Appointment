@@ -15,7 +15,6 @@ public class PatientInfoList {
         INSTANCE = new PatientInfoList();
     }
     private PatientInfoList(){
-        //get patients list from DB
         patientInfoList = DoctorAppointmentDBHelper.getInstance().getPatientInfo();
     }
 
@@ -30,16 +29,13 @@ public class PatientInfoList {
         return patientInfoList.get(position);
     }
     public void add(String name, int age, String disease, String symptoms ,String phoneNum,long appointmentDate){
-        Log.e("PatientInfoList: ","appointmentDate"+ DoctorUtils.getDateString(appointmentDate));
         PatientInfo patientInfo = new PatientInfo(name,age,disease,symptoms,phoneNum,appointmentDate);
         patientInfoList.add(0,patientInfo);
-        //insert into database
         DoctorAppointmentDBHelper.getInstance().insert(patientInfo);
     }
 
     public void remove(PatientInfo patientInfo){
         patientInfoList.remove(patientInfo);
-        //Delete from database
         DoctorAppointmentDBHelper.getInstance().delete(patientInfo);
     }
 

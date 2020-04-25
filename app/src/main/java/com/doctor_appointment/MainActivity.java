@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addPatient(View view){
-        //new AddNewDialogFragment
         new AddPatientDialogFragment.Builder()
                 .addOnNewPatientListener(adapter::notifyDataSetChanged)
                 .show(getSupportFragmentManager(),"add_new_dialog");

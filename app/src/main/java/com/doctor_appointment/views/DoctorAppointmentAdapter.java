@@ -21,7 +21,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppointmentAdapter.DoctorAppointmentViewHolder>  implements OnPatientChangedListener{
-    //private ArrayList<PatientInfo> data;
 
     public DoctorAppointmentAdapter() {
         setHasStableIds(true);
@@ -41,7 +40,6 @@ public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppoint
 
     @Override
     public void onBindViewHolder(@NonNull DoctorAppointmentViewHolder holder, int position) {
-        Log.e("onBindViewHolder: ", ""+PatientInfoList.getInstance().get(position).getAge());
         holder.populate(PatientInfoList.getInstance().get(position),this);
     }
 
@@ -49,8 +47,6 @@ public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppoint
 
     @Override
     public int getItemCount() {
-
-        Log.e("getItemCount: ", ""+PatientInfoList.getInstance().getCount());
         return PatientInfoList.getInstance().getCount();
     }
 
@@ -103,7 +99,6 @@ public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppoint
             itemView.setOnClickListener(this::onClick);
         }
         private void onClick(View view){
-            Log.e("onClick: ", "onClick"+patientInfo.getCreatedTime());
             new AlertDialog.Builder(view.getContext())
                     .setTitle("Patient info")
                     .setMessage("Name::     "+patientInfo.getName()+"\n"+

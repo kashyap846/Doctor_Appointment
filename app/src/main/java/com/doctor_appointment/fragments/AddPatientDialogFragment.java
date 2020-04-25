@@ -82,7 +82,6 @@ public class AddPatientDialogFragment extends DialogFragment {
 
     }
     private void addPatientButtonClick(View view){
-        Log.e("addPatientButtonClick: ", "addPatientButtonClick"+DoctorUtils.getAppointmentDatevalidity(appointmentDate));
         if(nameEditText.getText()==null || ageEditText.getText()==null || diseaseEditText.getText()==null || symptomsEditText.getText()==null || phoneNumEditText.getText()== null
          || DoctorUtils.getAppointmentDatevalidity(appointmentDate))
         {
@@ -93,13 +92,11 @@ public class AddPatientDialogFragment extends DialogFragment {
         String age = ageEditText.getText().toString();
         String disease = diseaseEditText.getText().toString();
         String symptoms = symptomsEditText.getText().toString();
-        //Date date = appointmentDate > 0 ? new Date(appointmentDate) : new Date();
         if(name.isEmpty() || age.isEmpty() || disease.isEmpty() || symptoms.isEmpty()){
             return;
         }
-        Log.e("addPatientButtonClick: ", "PatientInfoList.getInstance()"+PatientInfoList.getInstance());
         PatientInfoList.getInstance().add(name, Integer.parseInt(age),disease,symptoms,phoneNum,appointmentDate);
-    if(listener!= null){
+        if(listener!= null){
             listener.onNewPatient();
         }
         dismiss();

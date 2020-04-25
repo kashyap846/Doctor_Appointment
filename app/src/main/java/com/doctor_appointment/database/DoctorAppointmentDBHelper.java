@@ -40,7 +40,6 @@ public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
 
     public static void initialize(Context context){
         INSTANCE = new DoctorAppointmentDBHelper(context);
-        Log.e("initialize: ","initialize patient" );
         PatientInfoList.initialize();
     }
     private DoctorAppointmentDBHelper(@Nullable Context context) {
@@ -51,7 +50,6 @@ public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE);
-        //insert sample dataa here
         insert(db,new PatientInfo("Kashyap",26,"Viral Fever","cold,cough","9999999999",new Date().getTime()- (DoctorUtils.ONE_DAY)*2));
         insert(db,new PatientInfo("Kumar",43,"Viral Fever","cold,cough","7059882851",new Date().getTime()- (DoctorUtils.ONE_DAY)*3));
 
@@ -62,7 +60,6 @@ public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
 
     }
 
-    //update App widget here
     private void updateAppWidgetBroadcast(){
         Intent appWidgetIntent = new Intent(context, DoctorAppointmentWidgetProvider.class);
         appWidgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -143,16 +140,6 @@ public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
                 null,
                 null);
         int count = cursor.getCount();
-//        while (cursor.moveToNext()){
-//            long id = cursor.getLong(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry._ID));
-//            String name = cursor.getString(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_NAME));
-//            int age = cursor.getInt(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_AGE));
-//            String disease = cursor.getString(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_DISEASE));
-//            String symptoms = cursor.getString(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_SYMPTOMS));
-//            long createdTime = cursor.getLong(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_CREATED_TIME));
-//            String phoneNum = cursor.getString(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_PHONE_NUM));
-//            result.add(new PatientInfo(id,name,age,disease,symptoms,createdTime,phoneNum));
-//        }
         cursor.close();
         return count;
     }
@@ -171,12 +158,9 @@ public class DoctorAppointmentDBHelper extends SQLiteOpenHelper {
                 null,
                 null,
                 null);
-        //int count = cursor.getCount();
         while (cursor.moveToNext()){
-            //long id = cursor.getLong(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry._ID));
             long appointmentTime = cursor.getLong(cursor.getColumnIndex(DoctorAppointmentContract.DoctorAppointmentEntry.COLUMN_NAME_APPOINTMENT_TIME));
             if(appointmentTime-new Date().getTime()<0) {
-                Log.e("getOverDueCount: ", "truee"+appointmentTime);
                 result.add(appointmentTime);
             }
         }

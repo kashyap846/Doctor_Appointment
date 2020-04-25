@@ -12,7 +12,6 @@ public class DoctorAppointmentApplication extends Application {
     public void onCreate() {
         super.onCreate();
         DoctorAppointmentApplication.context = getApplicationContext();
-        Log.e( "onCreate: ", "DoctorAppointmentApplication");
         DoctorAppointmentDBHelper.initialize(getApplicationContext());
     }
 
