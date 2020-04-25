@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Doctor_Appointment</string>
+    <string name="app_name">Doctor Appointment </string>
     <string name="action_settings">Settings</string>
 
 
@@ -17,6 +17,11 @@
 
     <string name="total_appointments_till_date">Total Appointments till date:</string>
     <string name="total_patients_till_date">Total Patients till date:</string>
+
+<!--    <view Patient>-->
+    <string name="view_patient_title">Patient Details</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
 
 
 </resources>

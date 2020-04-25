@@ -1,4 +1,5 @@
 package com.doctor_appointment.utils;
+import android.util.Log;
 import android.widget.Toast;
 import com.doctor_appointment.DoctorAppointmentApplication;
 import java.text.DateFormat;
@@ -16,7 +17,7 @@ public class DoctorUtils {
         if (dateInMilli - currentTime >= ONE_DAY) {
             return false;
         } else {
-            Toast.makeText(DoctorAppointmentApplication.getContext(), "Please choose appointment date two days from today's date",
+            Toast.makeText(DoctorAppointmentApplication.getContext(), "You mush pick appointment date two days from the present date",
                     Toast.LENGTH_LONG).show();
             return true;
         }

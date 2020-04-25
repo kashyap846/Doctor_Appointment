@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new DoctorAppointmentAdapter();
+        adapter = new DoctorAppointmentAdapter(getSupportFragmentManager());
         recyclerView.setAdapter(adapter);
         FloatingActionButton add = findViewById(R.id.add);
         add.setOnClickListener(this::addPatient);

@@ -45,8 +45,12 @@ public class DoctorAppointmentWidgetProvider extends AppWidgetProvider {
     }
 
     private void populateNextPatientInfo(RemoteViews remoteViews, PatientInfo nextPatientInfo, int nextPatientId) {
-        remoteViews.setTextViewText(nextPatientId,"Next patient is "+nextPatientInfo.getName()+"   "+ DoctorUtils.getDateString(nextPatientInfo.getAppointmentDate())+ "\n");
-    }
+        if(nextPatientInfo != null) {
+            remoteViews.setTextViewText(nextPatientId, "Next patient is " + nextPatientInfo.getName() + "   " + DoctorUtils.getDateString(nextPatientInfo.getAppointmentDate()) + "\n");
+        }else{
+            remoteViews.setTextViewText(nextPatientId,"No Patients to show here");
+        }
+        }
 
     private void populatePatientsCount(RemoteViews remoteViews, int patientsCount, int patientViewId) {
         remoteViews.setTextViewText(patientViewId,"Total Patients till date "+patientsCount+"\n");

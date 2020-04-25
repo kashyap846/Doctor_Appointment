@@ -1,6 +1,7 @@
 package com.doctor_appointment.views;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.doctor_appointment.DoctorAppointmentApplication;
 import com.doctor_appointment.R;
+import com.doctor_appointment.fragments.AddPatientDialogFragment;
+import com.doctor_appointment.fragments.ViewPatientDialogFragment;
 import com.doctor_appointment.listeners.OnPatientChangedListener;
 import com.doctor_appointment.model.PatientInfo;
 import com.doctor_appointment.model.PatientInfoList;
@@ -21,8 +27,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppointmentAdapter.DoctorAppointmentViewHolder>  implements OnPatientChangedListener{
-
-    public DoctorAppointmentAdapter() {
+    FragmentManager fragmentManager;
+    public DoctorAppointmentAdapter(FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
         setHasStableIds(true);
     }
 
@@ -58,6 +65,7 @@ public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppoint
 
 
     public class DoctorAppointmentViewHolder extends RecyclerView.ViewHolder {
+        private Context context;
         public TextView getName() {
             return name;
         }
@@ -99,18 +107,33 @@ public class DoctorAppointmentAdapter extends RecyclerView.Adapter<DoctorAppoint
             itemView.setOnClickListener(this::onClick);
         }
         private void onClick(View view){
-            new AlertDialog.Builder(view.getContext())
-                    .setTitle("Patient info")
-                    .setMessage("Name::     "+patientInfo.getName()+"\n"+
-                            "Age::        "+patientInfo.getAge()+"\n"+
-                            "Number::       "+patientInfo.getPhoneNum()+"\n"+
-                            "Disease::      "+patientInfo.getDisease()+"\n"+
-                            "Symptoms::     "+patientInfo.getSymptoms()+"\n"+
-                            "Appointment Time::     "+DoctorUtils.getDateString(patientInfo.getAppointmentDate())) //"CreationTime::     "+dateFormat
-                    .setNegativeButton("cancel",(a,b) -> {})
-                    .setPositiveButton("Delete",(a,b) ->{changedListener.onPatientRemoved(patientInfo);})
-                    .show();
+//            new AlertDialog.Builder(view.getContext())
+//                    .setTitle("Patient info")
+//                    .setMessage("Name::     "+patientInfo.getName()+"\n"+
+//                            "Age::        "+patientInfo.getAge()+"\n"+
+//                            "Number::       "+patientInfo.getPhoneNum()+"\n"+
+//                            "Disease::      "+patientInfo.getDisease()+"\n"+
+//                            "Symptoms::     "+patientInfo.getSymptoms()+"\n"+
+//                            "Appointment Time::     "+DoctorUtils.getDateString(patientInfo.getAppointmentDate())) //"CreationTime::     "+dateFormat
+//                    .setNegativeButton("cancel",(a,b) -> {})
+//                    .setPositiveButton("Delete",(a,b) ->{changedListener.onPatientRemoved(patientInfo);})
+//                    .show();
 
+//            new ViewPatientDialogFragment().Builder()
+//                    .(adapter::notifyDataSetChanged)
+//                    .show(getSupportFragmentManager(),"add_new_dialog");
+//            new ViewPatientDialogFragment.Builder()
+//                    .viewPatientListener(this::deletePatient)
+//                    .show(getSupportFragmentManager(),"view_dialog");
+            new ViewPatientDialogFragment.Builder()
+                   .viewPatientListener(this::deletePatient,patientInfo)
+                   .show( fragmentManager,"view_dialog");
+
+
+        }
+
+        private void deletePatient() {
+            changedListener.onPatientRemoved(patientInfo);
         }
 
 

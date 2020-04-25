@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.doctor_appointment.DoctorAppointmentApplication;
 import com.doctor_appointment.R;
 import com.doctor_appointment.listeners.OnNewPatientListener;
 import com.doctor_appointment.model.PatientInfoList;
@@ -61,6 +63,13 @@ public class AddPatientDialogFragment extends DialogFragment {
         dateTextView.setOnClickListener(this::addDatePickDialog);
         Button addPatient = view.findViewById(R.id.add);
         addPatient.setOnClickListener(this::addPatientButtonClick);
+        Button cancel = view.findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         return view;
     }
 
@@ -82,17 +91,22 @@ public class AddPatientDialogFragment extends DialogFragment {
 
     }
     private void addPatientButtonClick(View view){
-        if(nameEditText.getText()==null || ageEditText.getText()==null || diseaseEditText.getText()==null || symptomsEditText.getText()==null || phoneNumEditText.getText()== null
-         || DoctorUtils.getAppointmentDatevalidity(appointmentDate))
+        if(nameEditText.getText()==null || ageEditText.getText()==null || diseaseEditText.getText()==null || symptomsEditText.getText()==null || phoneNumEditText.getText()== null)
         {
             return;
         }
+
         String name = nameEditText.getText().toString();
         String phoneNum = phoneNumEditText.getText().toString();
         String age = ageEditText.getText().toString();
         String disease = diseaseEditText.getText().toString();
         String symptoms = symptomsEditText.getText().toString();
         if(name.isEmpty() || age.isEmpty() || disease.isEmpty() || symptoms.isEmpty()){
+            Toast.makeText(DoctorAppointmentApplication.getContext(), "Please fill all the details properly",
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+        if(DoctorUtils.getAppointmentDatevalidity(appointmentDate)){
             return;
         }
         PatientInfoList.getInstance().add(name, Integer.parseInt(age),disease,symptoms,phoneNum,appointmentDate);
